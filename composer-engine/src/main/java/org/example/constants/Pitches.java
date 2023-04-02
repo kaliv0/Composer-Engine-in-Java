@@ -1,11 +1,12 @@
 package org.example.constants;
 
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
 
 public class Pitches {
-    public final static String[] SCALE_PITCHES = {"A", "B", "C", "D", "E", "F", "G"}; //TODO, use enum? or char[]
+    public final static List<String> SCALE_PITCHES = List.of("A", "B", "C", "D", "E", "F", "G"); //TODO, use enum? or char[]
     public final static Map<String, Integer> MAJOR_CIRCLE_OF_FIFTHS = Map.ofEntries(
             entry("C", 0),
             entry("G", 1),

@@ -7,5 +7,6 @@ public class ChromaticSigns {
     public static final String FLAT = "b";
     public static final int SIGN_COUNT_MIN = 0;
     public static final int SIGN_COUNT_MAX = 7;
-    public static final String[] SERIES = {"F", "C", "G", "D", "A", "E", "B"}; //TODO:previously CHROMATIC_SIGNS
+    public static final String[] SERIES = {"F", "C", "G", "D", "A", "E", "B"};
+    //TODO:previously CHROMATIC_SIGNS=> refactored to List<String>
 }

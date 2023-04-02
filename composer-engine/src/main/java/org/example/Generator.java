@@ -12,11 +12,13 @@ const chordMapper = require("./mappers/chord-mapper");
 package org.example;
 
 import org.example.common.Tuple;
+import org.example.keyCreators.ChordGenerator;
 import org.example.keyCreators.KeyGenerator;
 import org.example.randomGenerators.RandomKeySelector;
 import org.example.randomGenerators.Randomizer;
 
 import java.util.List;
+import java.util.Map;
 
 public class Generator {
     public static void main(String[] args) {
@@ -27,7 +29,7 @@ public class Generator {
         final int shouldApplyDominants = Randomizer.randomBit(); //TODO: change to boolean
 
         final List<String> scale = KeyGenerator.generateKey(String.format("%s %s", key, mode));
-        final chordsInKey = chordGenerator.generateChords(scale, mode);
+        final Map<Integer, String> chordsInKey = ChordGenerator.generateChords(scale, mode);
         //const progression = progressionGenerator.generateProgression(chordsInKey, mode, shouldApplyDominants);
         //const result = chordMapper.display(progression, scale, mode);
         //
@@ -39,5 +41,6 @@ public class Generator {
         System.out.println(key + " " + mode);
         System.out.println(shouldApplyDominants);
         System.out.println(scale);
+        System.out.println(chordsInKey);
     }
 }

@@ -4,7 +4,6 @@ import org.example.constants.Modes;
 import org.example.constants.scales.ScaleCounter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.example.constants.ErrorMessages.INVALID_KEY_ERROR;
@@ -23,14 +22,14 @@ public class KeyGenerator {
         String[] tonicModeArr = tonality.split(Modes.KEY_SEPARATOR);
         String tonic = tonicModeArr[0];
         String mode = tonicModeArr[1];
-        int pitchIndex = Arrays.asList(SCALE_PITCHES).indexOf(String.valueOf(tonic.charAt(0)));
+        int pitchIndex = SCALE_PITCHES.indexOf(String.valueOf(tonic.charAt(0)));
 
         //populates scale degrees
         List<String> newKey = new ArrayList<>();
         for (int i = ScaleCounter.START_INDEX; i < ScaleCounter.UPPER_BOUND; i++) {
-            newKey.add(SCALE_PITCHES[pitchIndex]);
+            newKey.add(SCALE_PITCHES.get(pitchIndex));
 
-            if (pitchIndex < SCALE_PITCHES.length - 1) {
+            if (pitchIndex < SCALE_PITCHES.size() - 1) {
                 pitchIndex++;
             } else {
                 pitchIndex = ScaleCounter.START_INDEX;

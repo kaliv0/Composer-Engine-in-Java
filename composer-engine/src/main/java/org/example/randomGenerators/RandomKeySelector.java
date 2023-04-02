@@ -8,8 +8,6 @@ import org.example.constants.Pitches;
 import org.example.constants.random.RandomIndexIntervals;
 import org.example.constants.random.RandomIntegerIndices;
 
-import java.util.Arrays;
-
 import static org.example.randomGenerators.Randomizer.randomIntegerFromInterval;
 
 /*
@@ -19,7 +17,7 @@ public class RandomKeySelector {
     public static Tuple<String, String> selectKey() {
         //chooses random key
         final int randomIndex = randomIntegerFromInterval(RandomIndexIntervals.MIN, RandomIndexIntervals.MAX);
-        String key = Pitches.SCALE_PITCHES[randomIndex];
+        String key = Pitches.SCALE_PITCHES.get(randomIndex);
 
         final int randomInteger = randomIntegerFromInterval(RandomIntegerIndices.MIN, RandomIntegerIndices.MAX);
         if (randomInteger == RandomIntegerIndices.PRIMARY) {
@@ -37,7 +35,7 @@ public class RandomKeySelector {
         }
 
         //checks for invalid key and chooses new one via recursion if necessary
-        if (Arrays.asList(KeyValidations.INVALID_KEYS).contains(String.format("%s %s", key, mode))) {
+        if (KeyValidations.INVALID_KEYS.contains(String.format("%s %s", key, mode))) {
             return selectKey();
         }
         return new Tuple<>(key, mode);

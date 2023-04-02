@@ -1,96 +1,100 @@
-/*
-const { MINOR_CHORD_DEGREE_INDECES, APPLIED_DOMINANT_COEFFICIENT,
-    chordIndeces, rootDegrees, chordSuffixes } = require("../constants/chords");
-const { modeTypes } = require("../constants/modes");
-const { scaleDegrees } = require("../constants/scales");
-
-function generateInMinor(scale) {
-    let chords = scale.reduce((chordList, currScaleDegree, index) => {
-        if (index === scaleDegrees.TONIC) {
-            chordList[rootDegrees.KEY_CENTER] = currScaleDegree + chordSuffixes.MINOR;
-            return chordList;
-        }
-
-        if (index === scaleDegrees.SUPERTONIC) {
-            // could be changed to diminished seventh chord
-            currScaleDegree += chordSuffixes.DIMINISHED
-                    }
-                    if (index === scaleDegrees.SUBDOMINANT) {
-                    currScaleDegree += chordSuffixes.MINOR;
-                    }
-                    chordList[index + 1] = currScaleDegree;
-                    return chordList;
-                    }, {});
-
-                    //creates applied dominants and cadential chords
-                    let degreeIndex = scaleDegrees.SUBMEDIANT;
-                    for (let j = chordIndeces.ALTERED_SUBMEDIANT; j <= chordIndeces.DOMINANT_SEVENTH; j += APPLIED_DOMINANT_COEFFICIENT) {
-                    if (degreeIndex === scaleDegrees.SUBMEDIANT) {
-                    // could be changed to French (flat five) chord
-                    chords[j]=scale[degreeIndex]+chordSuffixes.MAJOR;
-                            }
-                            if(degreeIndex===scaleDegrees.UPPER_BOUND){
-                            degreeIndex=scaleDegrees.TONIC;
-                            }
-                            chords[j]=scale[degreeIndex]+chordSuffixes.SEVENTH;
-                            degreeIndex++;
-                            }
-                            return addSuspendedDominant(chords,scale);
-                            }
-
-                            function addSuspendedDominant(chords,scale){
-                            chords[chordIndeces.SUSPENDED_DOMINANT]=scale[scaleDegrees.DOMINANT]+chordSuffixes.SUSPENDED;
-                            chords[chordIndeces.CADENTIAL_SIX_FOUR_CHORD]=
-                            `${scale[scaleDegrees.TONIC]}/${scale[scaleDegrees.DOMINANT]}`;
-                            return chords;
-                            }
-        */
 //generates all main chords in given key and all their applied dominants
 package org.example.keyCreators;
 
 import org.example.constants.Modes;
+import org.example.constants.chords.ChordIndices;
+import org.example.constants.chords.ChordSuffixes;
+import org.example.constants.chords.RootDegrees;
+import org.example.constants.scales.ScaleDegrees;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.example.constants.chords.Common.APPLIED_DOMINANT_COEFFICIENT;
+import static org.example.constants.chords.Common.MINOR_CHORD_DEGREE_INDICES;
 
 public class ChordGenerator {
-    public static List<String> generateChords(List<String> scale, String mode) {
+    public static Map<Integer, String> generateChords(List<String> scale, String mode) {
         if (mode.equals(Modes.MAJOR)) {
             return generateInMajor(scale);
         }
-//        if (mode.equals(Modes.MINOR)) {
-            return generateInMinor(scale);
-//        }
+        return generateInMinor(scale);
     }
 
-    private static List<String> generateInMajor(List<String> scale) {
-        List<String> chords = scale.reduce((chordList, currScaleDegree, index) => {
-            if (index === scaleDegrees.TONIC) {
-                chordList[rootDegrees.KEY_CENTER] = currScaleDegree;
-                return chordList;
+    private static Map<Integer, String> generateInMajor(List<String> scale) {
+        Map<Integer, String> chords = new HashMap<>();
+        for (int i = 0; i < scale.size(); i++) {
+            String currScaleDegree = scale.get(i);
+            if (i == ScaleDegrees.TONIC) {
+                chords.put(RootDegrees.KEY_CENTER, currScaleDegree);
+                continue;
             }
 
-            if (MINOR_CHORD_DEGREE_INDECES.includes(index)) {
-                currScaleDegree += chordSuffixes.MINOR;
+            if (MINOR_CHORD_DEGREE_INDICES.contains(i)) { //TODO: refactor array to List
+                currScaleDegree += ChordSuffixes.MINOR;
             }
-            if (index === scaleDegrees.SUBTONIC) {
-                currScaleDegree += chordSuffixes.DIMINISHED
+            if (i == ScaleDegrees.SUBTONIC) {
+                currScaleDegree += ChordSuffixes.DIMINISHED;
             }
-            chordList[index + 1] = currScaleDegree;
-            return chordList;
-        }, {});
+            chords.put(i + 1, currScaleDegree);
+        }
 
         //creates applied dominants and cadential chords
-        let degreeIndex = scaleDegrees.SUBMEDIANT;
-        for (let j = chordIndeces.ALTERED_SUBMEDIANT; j <= chordIndeces.DOMINANT_SEVENTH; j += APPLIED_DOMINANT_COEFFICIENT) {
-            if (degreeIndex === scaleDegrees.UPPER_BOUND) {
-                degreeIndex = scaleDegrees.TONIC;
+        int degreeIndex = ScaleDegrees.SUBMEDIANT;
+        for (int j = ChordIndices.ALTERED_SUBMEDIANT; j <= ChordIndices.DOMINANT_SEVENTH; j += APPLIED_DOMINANT_COEFFICIENT) {
+            if (degreeIndex == ScaleDegrees.UPPER_BOUND) {
+                degreeIndex = ScaleDegrees.TONIC;
             }
-            if (degreeIndex === scaleDegrees.SUBDOMINANT) {
-                chords[j] = scale[degreeIndex] + chordSuffixes.MAJOR + chordSuffixes.SEVENTH;
+            if (degreeIndex == ScaleDegrees.SUBDOMINANT) {
+                chords.put(j, scale.get(degreeIndex) + ChordSuffixes.MAJOR + ChordSuffixes.SEVENTH);
             }
-            chords[j] = scale[degreeIndex] + chordSuffixes.SEVENTH;
+            chords.put(j, scale.get(degreeIndex) + ChordSuffixes.SEVENTH);
             degreeIndex++;
         }
-        return addSuspendedDominant(chords, scale);
+        return addSuspendedDominant(chords, scale, false);
+    }
+
+    private static Map<Integer, String> generateInMinor(List<String> scale) {
+        Map<Integer, String> chords = new HashMap<>();
+        for (int i = 0; i < scale.size(); i++) {
+            String currScaleDegree = scale.get(i);
+            if (i == ScaleDegrees.TONIC) {
+                chords.put(RootDegrees.KEY_CENTER, currScaleDegree + ChordSuffixes.MINOR);
+                continue;
+            }
+
+            if (i == ScaleDegrees.SUPERTONIC) {
+                // could be changed to diminished seventh chord
+                currScaleDegree += ChordSuffixes.DIMINISHED;
+            }
+            if (i == ScaleDegrees.SUBDOMINANT) {
+                currScaleDegree += ChordSuffixes.MINOR;
+            }
+            chords.put(i + 1, currScaleDegree);
+        }
+
+        //creates applied dominants and cadential chords
+        int degreeIndex = ScaleDegrees.SUBMEDIANT;
+        for (int j = ChordIndices.ALTERED_SUBMEDIANT; j <= ChordIndices.DOMINANT_SEVENTH; j += APPLIED_DOMINANT_COEFFICIENT) {
+            if (degreeIndex == ScaleDegrees.SUBMEDIANT) {
+                // could be changed to French (flat five) chord
+                chords.put(j, scale.get(degreeIndex) + ChordSuffixes.MAJOR);
+            }
+            if (degreeIndex == ScaleDegrees.UPPER_BOUND) {
+                degreeIndex = ScaleDegrees.TONIC;
+            }
+            chords.put(j, scale.get(degreeIndex) + ChordSuffixes.SEVENTH);
+            degreeIndex++;
+        }
+        return addSuspendedDominant(chords, scale, true);
+    }
+
+    private static Map<Integer, String> addSuspendedDominant(Map<Integer, String> chords, List<String> scale, boolean isMinor) {
+        chords.put(ChordIndices.SUSPENDED_DOMINANT, scale.get(ScaleDegrees.DOMINANT) + ChordSuffixes.SUSPENDED);
+        String template = isMinor ? "%sm/%s" : "%s/%s";
+        chords.put(ChordIndices.CADENTIAL_SIX_FOUR_CHORD,
+                String.format(template, scale.get(ScaleDegrees.TONIC), scale.get(ScaleDegrees.DOMINANT)));
+        return chords;
     }
 }
