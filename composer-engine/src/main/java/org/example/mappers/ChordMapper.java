@@ -1,7 +1,7 @@
 /*
 const { scaleCounter, scaleDegrees } = require("../constants/scales");
-const { chordSuffixes, chordToneIndexes } = require("../constants/chords");
-const { accidentals } = require("../constants/chromaticSigns");
+const { ChordSuffixes, ChordToneIndices } = require("../constants/chords");
+const { ChromaticSigns } = require("../constants/chromaticSigns");
 const { modeTypes } = require("../constants/modes");
 const { translateDominant } = require("./dominant-mapper");
 const { raiseNote } = require('../alterators/note-alterator');
@@ -9,10 +9,10 @@ const { raiseNote } = require('../alterators/note-alterator');
 function readOtherNotesAboveRoot(scale, rootIndex, notesCount, mode) {
     let fullChord = [];
     let scaleIndex = rootIndex;
-    for (let j = chordToneIndexes.ROOT; j < notesCount; j++) {
+    for (let j = ChordToneIndices.ROOT; j < notesCount; j++) {
         if (mode === modeTypes.MINOR
             && rootIndex === scaleDegrees.DOMINANT
-            && j === chordToneIndexes.THIRD) {
+            && j === ChordToneIndices.THIRD) {
 
             //alters chord on fifth degree in minor mode
             fullChord.push(raiseNote(scale[scaleIndex]));
@@ -33,39 +33,49 @@ function readOtherNotesAboveRoot(scale, rootIndex, notesCount, mode) {
 
 package org.example.mappers;
 
+import org.example.common.Chord;
+import org.example.constants.ChromaticSigns;
+import org.example.constants.chords.ChordSuffixes;
+import org.example.constants.chords.ChordToneIndices;
+
+import java.util.ArrayList;
 import java.util.List;
 
 //maps chord abbreviations to full representation of the chords
 public class ChordMapper {
-    public static List<String> display(List<String> progression, List<String> scale, String mode) {
-        let root;
-        let signChar;
-        let fullChord;
-        let notesCount;
+    public static List<Chord> display(List<String> progression, List<String> scale, String mode) {
+        String root;
+        String signChar;
+        String[] fullChord;
+        int notesCount;
 
-        let chordTable = progression.reduce((acc, chord) =>{
-            signChar = chord.charAt(1);
+//        let chordTable = progression.reduce((acc, chord) =>{
+        List<Chord> chordTable = new ArrayList<>();
+        for (String chord : progression) {
+            signChar = String.valueOf(chord.charAt(1));
             //finds chord root
-            if (signChar == = accidentals.SHARP || signChar == = accidentals.FLAT) {
+            if (signChar.equals(ChromaticSigns.SHARP) || signChar.equals(ChromaticSigns.FLAT)) {
                 root = chord.substring(0, 2);
             } else {
-                root = chord.charAt(0);
+                root = String.valueOf(chord.charAt(0));
             }
 
             //calculates if is triad or seventh chord
-            if (chord.slice(-1) == = chordSuffixes.SEVENTH) {
-                notesCount = chordToneIndexes.DOMINANT_NOTE_COUNT;
+            if (String.valueOf(chord.charAt(chord.length() - 1)).equals(ChordSuffixes.SEVENTH)) {
+                notesCount = ChordToneIndices.DOMINANT_NOTE_COUNT;
             } else {
-                notesCount = chordToneIndexes.TRIAD_NOTE_COUNT;
+                notesCount = ChordToneIndices.TRIAD_NOTE_COUNT;
             }
 
-            if (notesCount == = chordToneIndexes.DOMINANT_NOTE_COUNT) {
+            if (notesCount == ChordToneIndices.DOMINANT_NOTE_COUNT) {
                 fullChord = translateDominant(scale, root, mode);
-                acc.push({
-                        name:chord,
-                        content:fullChord,
-            });
-                return acc;
+//                acc.push({
+//                        name:chord,
+//                        content:fullChord,
+//            });
+                chordTable.add(new Chord(chord, fullChord));
+//                return acc;
+                continue;
             }
 
         const rootIndex = scale.indexOf(root);
@@ -78,12 +88,12 @@ public class ChordMapper {
                     content:fullChord,
         });
             return acc;
-        }, []);
+        }
 
         //adjusts suspended chord if any
-        if (chordTable.some(ch = > ch.name.includes(chordSuffixes.SUSPENDED))){
+        if (chordTable.some(ch = > ch.name.includes(ChordSuffixes.SUSPENDED))){
             //there could be no more than one suspended chord in the progression
-            let susIndex = chordTable.findIndex(ch = > ch.name.includes(chordSuffixes.SUSPENDED));
+            let susIndex = chordTable.findIndex(ch = > ch.name.includes(ChordSuffixes.SUSPENDED));
 
             let middleIndex = scale.indexOf(chordTable[susIndex].content[1]);
             //keeps index within octave boundaries
@@ -97,9 +107,9 @@ public class ChordMapper {
         }
 
         //аdjusts K46 chord if any
-        if (chordTable.some(ch = > ch.name.includes(chordSuffixes.SLASH_CHORD))){
+        if (chordTable.some(ch = > ch.name.includes(ChordSuffixes.SLASH_CHORD))){
             //there could be no more than one K64 chord in the progression
-            let cadentialIndex = chordTable.findIndex(ch = > ch.name.includes(chordSuffixes.SLASH_CHORD));
+            let cadentialIndex = chordTable.findIndex(ch = > ch.name.includes(ChordSuffixes.SLASH_CHORD));
             let bassNote = chordTable[cadentialIndex].content.pop();
             chordTable[cadentialIndex].content.unshift(bassNote);
         }

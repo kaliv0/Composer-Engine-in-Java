@@ -11,6 +11,7 @@ const chordMapper = require("./mappers/chord-mapper");
 
 package org.example;
 
+import org.example.common.Chord;
 import org.example.common.Tuple;
 import org.example.harmonyCreators.ProgressionGenerator;
 import org.example.keyCreators.ChordGenerator;
@@ -33,7 +34,7 @@ public class Generator {
         final List<String> scale = KeyGenerator.generateKey(String.format("%s %s", key, mode));
         final Map<Integer, String> chordsInKey = ChordGenerator.generateChords(scale, mode);
         final List<String> progression = ProgressionGenerator.generateProgression(chordsInKey, mode, shouldApplyDominants);
-        final List<String> result = ChordMapper.display(progression, scale, mode);
+        final List<Chord> result = ChordMapper.display(progression, scale, mode);
         //
         //        console.log(progression);
         //        result.forEach(chord = > {
