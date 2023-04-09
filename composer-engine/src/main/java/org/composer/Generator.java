@@ -28,5 +28,27 @@ public class Generator {
         final Map<Integer, String> chordsInKey = ChordGenerator.generateChords(scale, mode);
         final List<String> progression = ProgressionGenerator.generateProgression(chordsInKey, mode, shouldApplyDominants);
         final List<Chord> result = ChordMapper.display(progression, scale, mode);
+
+        List<String> x = List.of(
+                "Fm",
+                "Eb",
+                "Ab",
+                "Db",
+                "Bbm",
+                "C",
+                "Fm",
+                "Ab",
+                "Db",
+                "C",
+                "Fm",
+                "Ab7",
+                "Db",
+                "Bbm",
+                "Csus",
+                "C",
+                "Fm"
+        );
+
+        System.out.println(x);
     }
 }
