@@ -22,13 +22,14 @@ public class Generator {
         Tuple<String, String> keyModeTuple = RandomKeySelector.selectKey();
         final String key = keyModeTuple.getFirst();
         final String mode = keyModeTuple.getSecond();
+        final String chosenKeyName = String.format("%s %s", key, mode);
         final boolean shouldApplyDominants = BooleanTranslator.intToBoolean(Randomizer.randomBit());
 
-        final List<String> scale = KeyGenerator.generateKey(String.format("%s %s", key, mode));
+        final List<String> scale = KeyGenerator.generateKey(chosenKeyName);
         final Map<Integer, String> chordsInKey = ChordGenerator.generateChords(scale, mode);
         final List<String> progression = ProgressionGenerator.generateProgression(chordsInKey, mode, shouldApplyDominants);
         final List<Chord> result = ChordMapper.display(progression, scale, mode);
 
-        MidiCreator.createMidi(result);
+        MidiCreator.createMidi(result, chosenKeyName);
     }
 }

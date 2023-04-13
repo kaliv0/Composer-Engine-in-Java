@@ -17,7 +17,9 @@ Composer.App supports the following functionalities:
 - *_DominantMapper_* => reads dominant seventh chords and modifies them where necessary
 - *_NoteAlterator_* => adds accidentals for raising or lowering chord tones
 - *_Randomizer_* => helper function for random selection of integers used throughout the application
+- *_MidiCreator_* => creates MIDI file with the generated progression
 - *_Generator_* => main entry point of the application
+
 
 ========================================================================
 

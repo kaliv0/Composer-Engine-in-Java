@@ -18,6 +18,5 @@ public class KeyValidations {
             "A# major",
             "B# major",
             "B# minor"
-    )
-            ;
+    );
 }
