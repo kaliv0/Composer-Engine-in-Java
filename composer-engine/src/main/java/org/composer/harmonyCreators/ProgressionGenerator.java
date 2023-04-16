@@ -1,5 +1,6 @@
 package org.composer.harmonyCreators;
 
+import org.composer.constants.Modes;
 import org.composer.constants.chords.HarmonicFunctions;
 import org.composer.constants.random.RandomBitStates;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.composer.constants.chords.Common.*;
+import static org.composer.constants.chords.HarmonicFunctions.SUBSIDIARY_SUBDOMINANT;
 import static org.composer.randomGenerators.Randomizer.randomBit;
 
 /**
@@ -19,7 +21,8 @@ import static org.composer.randomGenerators.Randomizer.randomBit;
  * - add modal interchange (Neapolitan chord)
  */
 public class ProgressionGenerator {
-    public static List<String> generateProgression(final Map<Integer, String> tonalChords, final String mode, final boolean shouldApplyDominants) {
+    public static List<String> generateProgression(final Map<Integer, String> tonalChords,
+                                                   final String mode, final boolean shouldApplyDominants) {
         int progressionSize = 0;
         int funcIndex = 0;
         List<Integer> progression = new ArrayList<>();
@@ -38,6 +41,10 @@ public class ProgressionGenerator {
                     }
                     //avoids duplicates at penultimate index
                     if (progressionSize >= PROGRESSION_LENGTH_DUPLICATE_THRESHOLD && progression.get(progressionSize - 2) == chord) {
+                        continue;
+                    }
+                    //avoids usage of Sii in minor outside ii-v sequence
+                    if (mode.equals(Modes.MINOR) && chord == SUBSIDIARY_SUBDOMINANT) {
                         continue;
                     }
                     progression.add(chord);

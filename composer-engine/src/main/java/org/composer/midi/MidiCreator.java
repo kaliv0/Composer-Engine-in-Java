@@ -3,7 +3,6 @@ package org.composer.midi;
 import org.composer.common.Chord;
 import org.jfugue.midi.MidiFileManager;
 import org.jfugue.pattern.Pattern;
-import org.jfugue.player.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.composer.constants.ChromaticSigns.DOUBLE_SHARP;
-import static org.composer.constants.MidiContants.*;
+import static org.composer.constants.MidiConstants.*;
 
 /**
  * creates midi file - integrated with JFugue
@@ -25,10 +24,7 @@ public class MidiCreator {
             translated_progression = translate(result);
         }
 
-        final Player player = new Player();
         final Pattern pattern = new Pattern(translated_progression).getPattern().setTempo(TEMPO);
-        player.play(pattern);
-
         try {
             final File filePath = new File(MIDI_FILE_PATH);
             MidiFileManager.savePatternToMidi(pattern, filePath);
@@ -43,9 +39,9 @@ public class MidiCreator {
                                 NOTE_DELIMITER, chord.content().stream()
                                         .map(n -> {
                                             if (n.endsWith(DOUBLE_SHARP)) {
-                                                return n.replace(DOUBLE_SHARP, JFUGUE_DOUBLE_SHARP);
+                                                return n.replace(DOUBLE_SHARP, JFUGUE_DOUBLE_SHARP) + WHOLE_NOTE;
                                             }
-                                            return n;
+                                            return n + WHOLE_NOTE;
                                         })
                                         .toList()
                         )
@@ -55,7 +51,12 @@ public class MidiCreator {
 
     private static String translate(List<Chord> progression) {
         return progression.stream()
-                .map(chord -> chord.content().get(0) + BASE_NOTE_DELIMITER + String.join(NOTE_DELIMITER, chord.content()))
+                .map(chord -> chord.content().get(0) + BASE_NOTE_DELIMITER + String.join(
+                                NOTE_DELIMITER, chord.content().stream()
+                                        .map(n -> n + WHOLE_NOTE)
+                                        .toList()
+                        )
+                )
                 .collect(Collectors.joining(CHORD_DELIMITER));
     }
 }

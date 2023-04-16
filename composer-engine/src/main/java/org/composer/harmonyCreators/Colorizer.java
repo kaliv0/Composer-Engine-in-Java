@@ -103,7 +103,7 @@ public class Colorizer {
         }
 
         if (colorizedProgression.get(colorizedProgression.size() - 1) != RootDegrees.DOMINANT) {
-            colorizedProgression = createFinalAuthenticCadence(colorizedProgression);
+            createFinalAuthenticCadence(colorizedProgression);
             //adds final tonic
             colorizedProgression.add(HarmonicFunctions.TONIC[0]);
             return materialize(colorizedProgression, tonalChords);
@@ -203,17 +203,16 @@ public class Colorizer {
         return new Tuple<>(colorizedProgression, colorizationIndex);
     }
 
-    private static List<Integer> createFinalAuthenticCadence(List<Integer> colorizedProgression) {
+    private static void createFinalAuthenticCadence(List<Integer> colorizedProgression) {
         if (randomBit() == RandomBitStates.NEGATIVE
                 && colorizedProgression.get(colorizedProgression.size() - 1) != RootDegrees.KEY_CENTER) {
             //adds double appoggiatura to dominant seventh chord
             colorizedProgression.add(ChordIndices.CADENTIAL_SIX_FOUR_CHORD);
             colorizedProgression.add(ChordIndices.DOMINANT_SEVENTH);
-            return colorizedProgression;
+            return;
         }
         //adds single leaning tone to dominant five chord
         colorizedProgression.add(ChordIndices.SUSPENDED_DOMINANT);
         colorizedProgression.add(HarmonicFunctions.DOMINANT[0]);
-        return colorizedProgression;
     }
 }

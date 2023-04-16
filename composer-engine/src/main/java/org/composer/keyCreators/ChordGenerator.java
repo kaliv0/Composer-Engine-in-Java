@@ -67,7 +67,7 @@ public class ChordGenerator {
             }
 
             if (i == ScaleDegrees.SUPERTONIC) {
-                // could be changed to diminished seventh chord
+                // could be changed to diminished seventh chord -> currently only used in ii-v combination
                 currScaleDegree += ChordSuffixes.DIMINISHED;
             }
             if (i == ScaleDegrees.SUBDOMINANT) {

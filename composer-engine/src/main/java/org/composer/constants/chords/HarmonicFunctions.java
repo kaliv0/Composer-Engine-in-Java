@@ -6,4 +6,6 @@ public class HarmonicFunctions {
     public static final int[] SUBDOMINANT = {4, 2};
     public static final int[] DOMINANT = {5};
     public static final int[][] MATRIX = new int[][]{TONIC, SUBDOMINANT, DOMINANT};
+    public static final int SUBSIDIARY_SUBDOMINANT = 2;
+
 }
