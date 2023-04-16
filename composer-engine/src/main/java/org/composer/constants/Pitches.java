@@ -28,4 +28,14 @@ public class Pitches {
             entry("D#", 9),
             entry("A#", 10)
     );
+
+    public final static Map<String, Integer> LEAP_INDICES = Map.ofEntries( //TODO: rename
+            entry("C", 0),
+            entry("D", 1),
+            entry("E", 2),
+            entry("F", 3),
+            entry("G", 4),
+            entry("B", 5),
+            entry("A", 6)
+    );
 }

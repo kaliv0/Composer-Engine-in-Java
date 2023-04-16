@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.composer.constants.MidiContants.*;
+import static org.composer.constants.MidiConstants.*;
 
 /**
  * creates midi file - integrated with JFugue
@@ -65,20 +65,22 @@ public class MidiCreator {
         List<String> finalResult = new ArrayList<>();
         for (int i = 0; i < progression.size(); i++) {
             var currChord = progression.get(i).getContent();
-            List<String> result = new ArrayList<>();
+            List<String> translatedChord = new ArrayList<>();
             //progression.get(i).getName() + BASE_NOTE_DELIMITER+
-            result.add(currChord.get(0) + "5" + WHOLE_NOTE);
+
+            //keeps all roots in central octave -> TODO: find different solution -> similar to Stream.of(...).anyMatch(...)
+            translatedChord.add(currChord.get(0) + "5" + WHOLE_NOTE);
             for (int j = 1; j < currChord.size(); j++) {
-                var previousNote = result.get(j - 1);
+                var previousNote = translatedChord.get(j - 1);
                 if (previousNote.contains("6")
                         || (Stream.of("G", "A", "B").anyMatch(previousNote::startsWith)
                         && Stream.of("C", "D", "E").anyMatch(currChord.get(j)::startsWith))) {
-                    result.add(currChord.get(j) + "6" + WHOLE_NOTE);
+                    translatedChord.add(currChord.get(j) + "6" + WHOLE_NOTE);
                 } else {
-                    result.add(currChord.get(j) + "5" + WHOLE_NOTE);
+                    translatedChord.add(currChord.get(j) + "5" + WHOLE_NOTE);
                 }
             }
-            finalResult.add(String.join(NOTE_DELIMITER, result));
+            finalResult.add(String.join(NOTE_DELIMITER, translatedChord));
         }
 
         /*

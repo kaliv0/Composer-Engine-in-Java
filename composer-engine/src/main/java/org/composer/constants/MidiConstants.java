@@ -2,7 +2,7 @@ package org.composer.constants;
 
 import java.util.List;
 
-public class MidiContants {
+public class MidiConstants {
     public static final String MIDI_FILE_PATH = "../engine.midi";
     public static final int TEMPO = 200;
     public static final String NOTE_DELIMITER = "+";

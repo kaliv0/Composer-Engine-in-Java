@@ -2,7 +2,7 @@ package org.composer;
 
 import org.composer.common.Chord;
 import org.composer.harmonyCreators.ProgressionGenerator;
-import org.composer.invertors.ChordInverter;
+import org.composer.inverters.ChordInverter;
 import org.composer.keyCreators.ChordGenerator;
 import org.composer.keyCreators.KeyGenerator;
 import org.composer.mappers.ChordMapper;
