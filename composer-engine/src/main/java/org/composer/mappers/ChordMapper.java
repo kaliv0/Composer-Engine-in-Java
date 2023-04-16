@@ -55,7 +55,7 @@ public class ChordMapper {
 
         //adjusts suspended chord if any
         Optional<Chord> susChord = chordTable.stream()
-                .filter(ch -> ch.name().contains(ChordSuffixes.SUSPENDED))
+                .filter(ch -> ch.getName().contains(ChordSuffixes.SUSPENDED))
                 .findFirst();
         if (susChord.isPresent()) {
             //there could be no more than one suspended chord in the progression
@@ -63,7 +63,7 @@ public class ChordMapper {
 
             int middleIndex = scale.indexOf(
                     chordTable.get(susIndex)
-                            .content().get(1)
+                            .getContent().get(1)
             );
             //keeps index within octave boundaries
             if (middleIndex + ScaleCounter.SUSPENDED_CHORD_INCREMENTER >= ScaleCounter.DEGREE_COUNT) {
@@ -73,23 +73,23 @@ public class ChordMapper {
             }
 
             chordTable.get(susIndex)
-                    .content().set(
+                    .getContent().set(
                             1, scale.get(middleIndex)
                     );
         }
 
         //adjusts K46 chord if any
         Optional<Chord> slashChord = chordTable.stream()
-                .filter(ch -> ch.name().contains(ChordSuffixes.SLASH_CHORD))
+                .filter(ch -> ch.getName().contains(ChordSuffixes.SLASH_CHORD))
                 .findFirst();
         if (slashChord.isPresent()) {
             //there could be no more than one K64 chord in the progression
             int cadentialIndex = chordTable.indexOf(slashChord.get());
-            int chordSize = chordTable.get(cadentialIndex).content().size();
+            int chordSize = chordTable.get(cadentialIndex).getContent().size();
             String bassNote = chordTable.get(cadentialIndex)
-                    .content()
+                    .getContent()
                     .remove(chordSize - 1);
-            chordTable.get(cadentialIndex).content().add(0, bassNote);
+            chordTable.get(cadentialIndex).getContent().add(0, bassNote);
         }
         return chordTable;
     }

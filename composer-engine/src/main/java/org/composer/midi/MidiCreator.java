@@ -6,10 +6,10 @@ import org.jfugue.pattern.Pattern;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.composer.constants.ChromaticSigns.DOUBLE_SHARP;
 import static org.composer.constants.MidiContants.*;
 
 /**
@@ -31,32 +31,74 @@ public class MidiCreator {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
+        System.out.println(translated_progression);
     }
 
     private static String translateWithSharps(List<Chord> progression) {
-        return progression.stream()
-                .map(chord -> chord.content().get(0) + BASE_NOTE_DELIMITER + String.join(
-                                NOTE_DELIMITER, chord.content().stream()
-                                        .map(n -> {
-                                            if (n.endsWith(DOUBLE_SHARP)) {
-                                                return n.replace(DOUBLE_SHARP, JFUGUE_DOUBLE_SHARP) + WHOLE_NOTE;
-                                            }
-                                            return n + WHOLE_NOTE;
-                                        })
-                                        .toList()
-                        )
-                )
-                .collect(Collectors.joining(CHORD_DELIMITER));
+//        return progression.stream()
+//                .map(chord -> chord.getContent().get(0) + BASE_NOTE_DELIMITER + String.join(
+//                                NOTE_DELIMITER, chord.getContent().stream()
+//                                        .map(n -> {
+//                                            if (n.endsWith(DOUBLE_SHARP)) {
+//                                                return n.replace(DOUBLE_SHARP, JFUGUE_DOUBLE_SHARP) + WHOLE_NOTE;
+//                                            }
+//                                            return n + WHOLE_NOTE;
+//                                        })
+//                                        .toList()
+//                        )
+//                )
+//                .collect(Collectors.joining(CHORD_DELIMITER));
+        return null;
     }
 
     private static String translate(List<Chord> progression) {
-        return progression.stream()
-                .map(chord -> chord.content().get(0) + BASE_NOTE_DELIMITER + String.join(
-                                NOTE_DELIMITER, chord.content().stream()
-                                        .map(n -> n + WHOLE_NOTE)
-                                        .toList()
-                        )
-                )
-                .collect(Collectors.joining(CHORD_DELIMITER));
+//        return progression.stream()
+//                .map(chord -> chord.getContent().get(0) + BASE_NOTE_DELIMITER + String.join(
+//                                NOTE_DELIMITER, chord.getContent().stream()
+//                                        .map(n -> n + WHOLE_NOTE)
+//                                        .toList()
+//                        )
+//                )
+//                .collect(Collectors.joining(CHORD_DELIMITER));
+
+        List<String> finalResult = new ArrayList<>();
+        for (int i = 0; i < progression.size(); i++) {
+            var currChord = progression.get(i).getContent();
+            List<String> result = new ArrayList<>();
+            //progression.get(i).getName() + BASE_NOTE_DELIMITER+
+            result.add(currChord.get(0) + "5" + WHOLE_NOTE);
+            for (int j = 1; j < currChord.size(); j++) {
+                var previousNote = result.get(j - 1);
+                if (previousNote.contains("6")
+                        || (Stream.of("G", "A", "B").anyMatch(previousNote::startsWith)
+                        && Stream.of("C", "D", "E").anyMatch(currChord.get(j)::startsWith))) {
+                    result.add(currChord.get(j) + "6" + WHOLE_NOTE);
+                } else {
+                    result.add(currChord.get(j) + "5" + WHOLE_NOTE);
+                }
+            }
+            finalResult.add(String.join(NOTE_DELIMITER, result));
+        }
+
+        /*
+         //re-adjust first chord if second one shares common tone and starts in a different register due to range limitations
+        List<String> firstChord = progression.get(0).getContent();
+        List<String> secondChord = progression.get(1).getContent();
+        String firstSoprano = firstChord.get(firstChord.size() - 1);
+        String secondSoprano = secondChord.get(secondChord.size() - 1);
+        //check if both chords share same top note but in different registers
+        if ((firstSoprano.substring(0, firstSoprano.length() - 1).equals(secondSoprano.substring(0, secondSoprano.length() - 1)))
+                && (firstSoprano.charAt(firstSoprano.length() - 1) != secondSoprano.length() - 1)) {
+            //bring first chord an octave higher
+            progression.get(0).setContent(
+                    firstChord.stream()
+                            .map(note -> note.substring(note.length() - 1) + "6")
+                            .toList()
+            );
+        }
+         */
+
+        return String.join(CHORD_DELIMITER, finalResult);
     }
 }
