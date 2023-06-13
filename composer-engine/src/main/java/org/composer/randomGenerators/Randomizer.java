@@ -11,4 +11,6 @@ public class Randomizer {
     public static int randomBit() {
         return (int) Math.round(Math.random());
     }
+
+    public static boolean randomBoolean() {return randomBit() == 0;}
 }

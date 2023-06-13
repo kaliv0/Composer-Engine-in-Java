@@ -9,7 +9,6 @@ import org.composer.mappers.ChordMapper;
 import org.composer.midi.MidiCreator;
 import org.composer.randomGenerators.RandomKeySelector;
 import org.composer.randomGenerators.Randomizer;
-import org.composer.utils.BooleanTranslator;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class Generator {
         final String key = keyModeTuple.getFirst();
         final String mode = keyModeTuple.getSecond();
         final String chosenKeyName = String.format("%s %s", key, mode);
-        final boolean shouldApplyDominants = BooleanTranslator.intToBoolean(Randomizer.randomBit());
+        final boolean shouldApplyDominants = Randomizer.randomBoolean();
 
         final List<String> scale = KeyGenerator.generateKey(chosenKeyName);
         final Map<Integer, String> chordsInKey = ChordGenerator.generateChords(scale, mode);
